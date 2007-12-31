@@ -7,6 +7,7 @@
     <groupId>org.sixcats</groupId>
     <artifactId>sixcats-utils</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <description></description>
     <dependencies>
         <dependency>
