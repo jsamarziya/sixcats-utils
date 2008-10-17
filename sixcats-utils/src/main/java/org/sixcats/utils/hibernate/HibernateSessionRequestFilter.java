@@ -24,25 +24,25 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.StaleObjectStateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * Source: http://hibernate.org/43.html
  */
 public class HibernateSessionRequestFilter implements Filter {
-    private static Log LOG = LogFactory
-	    .getLog(HibernateSessionRequestFilter.class);
+    private static final Logger LOGGER = LoggerFactory
+	    .getLogger(HibernateSessionRequestFilter.class);
 
     private SessionFactory sessionFactory;
 
     public void doFilter(ServletRequest request, ServletResponse response,
 	    FilterChain chain) throws IOException, ServletException {
 	try {
-	    if (LOG.isDebugEnabled()) {
-		LOG.debug("Starting a database transaction");
+	    if (LOGGER.isDebugEnabled()) {
+		LOGGER.debug("Starting a database transaction");
 	    }
 	    sessionFactory.getCurrentSession().beginTransaction();
 
@@ -50,15 +50,15 @@ public class HibernateSessionRequestFilter implements Filter {
 	    chain.doFilter(request, response);
 
 	    // Commit and cleanup
-	    if (LOG.isDebugEnabled()) {
-		LOG.debug("Committing the database transaction");
+	    if (LOGGER.isDebugEnabled()) {
+		LOGGER.debug("Committing the database transaction");
 	    }
 	    sessionFactory.getCurrentSession().getTransaction().commit();
 
 	} catch (StaleObjectStateException staleEx) {
-	    LOG
+	    LOGGER
 		    .error("This interceptor does not implement optimistic concurrency control!");
-	    LOG
+	    LOGGER
 		    .error("Your application will not work until you add compensation actions!");
 	    // Rollback, close everything, possibly compensate for any permanent
 	    // changes during the conversation, and finally restart business
@@ -72,13 +72,13 @@ public class HibernateSessionRequestFilter implements Filter {
 	    try {
 		if (sessionFactory.getCurrentSession().getTransaction()
 			.isActive()) {
-		    LOG
+		    LOGGER
 			    .debug("Trying to rollback database transaction after exception");
 		    sessionFactory.getCurrentSession().getTransaction()
 			    .rollback();
 		}
 	    } catch (Throwable rbEx) {
-		LOG.error("Could not rollback transaction after exception!",
+		LOGGER.error("Could not rollback transaction after exception!",
 			rbEx);
 	    }
 
@@ -88,8 +88,8 @@ public class HibernateSessionRequestFilter implements Filter {
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {
-	LOG.debug("Initializing filter...");
-	LOG
+	LOGGER.debug("Initializing filter...");
+	LOGGER
 		.debug("Obtaining SessionFactory from static HibernateUtil singleton");
 	sessionFactory = HibernateUtil.getSessionFactory();
     }

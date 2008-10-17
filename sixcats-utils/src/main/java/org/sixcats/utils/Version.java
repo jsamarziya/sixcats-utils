@@ -19,11 +19,11 @@ import java.util.ListResourceBundle;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Version {
-    private static final Log log = LogFactory.getLog(Version.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Version.class);
     private static ResourceBundle rb;
 
     private Version() {
@@ -40,7 +40,7 @@ public class Version {
 	try {
 	    rb = ResourceBundle.getBundle("Version");
 	} catch (MissingResourceException ex) {
-	    log.warn("Unable to load version resource bundle", ex);
+	    LOGGER.warn("Unable to load version resource bundle", ex);
 	    rb = new ListResourceBundle() {
 		@Override
 		protected Object[][] getContents() {
