@@ -18,15 +18,16 @@ package org.sixcats.utils;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides access control and taint checking for accessing files contained in a
  * specified subtree of the filesystem.
  */
 public class FileAccessManager {
-    private final Log log = LogFactory.getLog(getClass());
+    private static final Logger LOGGER = LoggerFactory
+	    .getLogger(FileAccessManager.class);
 
     private String baseDirectory;
 
@@ -47,11 +48,10 @@ public class FileAccessManager {
     }
 
     /**
-     * Returns <code>true</code> if the access to the specified file is
-     * allowed.
+     * Returns <code>true</code> if the access to the specified file is allowed.
      * 
      * @throws IOException
-     *                 if an I/O error occurs
+     *             if an I/O error occurs
      */
     public boolean isValidFile(final File file) throws IOException {
 	return FileUtils.isAncestor(new File(getBaseDirectory()), file);
@@ -61,13 +61,13 @@ public class FileAccessManager {
      * Returns a File object for the specified relative path.
      * 
      * @param relativePath
-     *                the path of the file, relative to the base directory
+     *            the path of the file, relative to the base directory
      * @return a File object for the specified file
      * @throws IOException
-     *                 if an I/O error occurs
+     *             if an I/O error occurs
      * @throws SecurityException
-     *                 if the specified location is not located in the directory
-     *                 tree rooted at the base directory
+     *             if the specified location is not located in the directory
+     *             tree rooted at the base directory
      */
     public File getFile(final String relativePath) throws IOException,
 	    SecurityException {
@@ -75,8 +75,8 @@ public class FileAccessManager {
 	if (isValidFile(file)) {
 	    return file;
 	} else {
-	    log.error("file taint check failed (relativePath=" + relativePath
-		    + ", file=" + file.getCanonicalPath() + ")");
+	    LOGGER.error("file taint check failed (relativePath="
+		    + relativePath + ", file=" + file.getCanonicalPath() + ")");
 	    throw new SecurityException("illegal file path");
 	}
     }
