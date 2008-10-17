@@ -28,9 +28,6 @@ public class CalendarDate implements Comparable<CalendarDate> {
     private Integer month;
     private Integer year;
 
-    private CalendarDate() {
-    }
-
     public CalendarDate(Integer day, Integer month, Integer year) {
 	Validate.notNull(year, "Year cannot be null");
 	setDay(day);

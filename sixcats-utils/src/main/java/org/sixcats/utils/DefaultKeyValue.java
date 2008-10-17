@@ -49,7 +49,7 @@ public class DefaultKeyValue<K, V> implements KeyValue<K, V> {
 	if (this == obj) {
 	    return true;
 	}
-	DefaultKeyValue o = (DefaultKeyValue) obj;
+	DefaultKeyValue<?, ?> o = (DefaultKeyValue<?, ?>) obj;
 	return new EqualsBuilder().append(getKey(), o.getKey()).append(
 		getValue(), o.getValue()).isEquals();
     }
