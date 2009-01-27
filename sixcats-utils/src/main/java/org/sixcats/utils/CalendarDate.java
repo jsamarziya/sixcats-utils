@@ -28,86 +28,92 @@ public class CalendarDate implements Comparable<CalendarDate> {
     private Integer month;
     private Integer year;
 
+    private CalendarDate() {
+        super();
+    }
+
     public CalendarDate(Integer day, Integer month, Integer year) {
-	Validate.notNull(year, "Year cannot be null");
-	setDay(day);
-	setMonth(month);
-	setYear(year);
+        this();
+        Validate.notNull(year, "Year cannot be null");
+        setDay(day);
+        setMonth(month);
+        setYear(year);
     }
 
     public CalendarDate(final Date date) {
-	Validate.notNull(date, "date cannot be null");
-	Calendar calendar = ThreadLocalObjects.getCalendar();
-	calendar.setTime(date);
-	setDay(calendar.get(Calendar.DATE));
-	setMonth(calendar.get(Calendar.MONTH) + 1);
-	setYear(calendar.get(Calendar.YEAR));
+        this();
+        Validate.notNull(date, "date cannot be null");
+        Calendar calendar = ThreadLocalObjects.getCalendar();
+        calendar.setTime(date);
+        setDay(calendar.get(Calendar.DATE));
+        setMonth(calendar.get(Calendar.MONTH) + 1);
+        setYear(calendar.get(Calendar.YEAR));
     }
 
     public Integer getDay() {
-	return day;
+        return day;
     }
 
     private void setDay(final Integer day) {
-	this.day = day;
+        this.day = day;
     }
 
     public Integer getMonth() {
-	return month;
+        return month;
     }
 
     private void setMonth(final Integer month) {
-	this.month = month;
+        this.month = month;
     }
 
     public Integer getYear() {
-	return year;
+        return year;
     }
 
     private void setYear(final Integer year) {
-	this.year = year;
+        this.year = year;
     }
 
     @Override
     public String toString() {
-	return CalendarDateFormat.getInstance().format(this);
+        return CalendarDateFormat.getInstance().format(this);
     }
 
     public Date toDate() {
-	Calendar calendar = ThreadLocalObjects.getCalendar();
-	if (getDay() != null) {
-	    calendar.set(Calendar.DATE, getDay());
-	}
-	if (getMonth() != null) {
-	    calendar.set(Calendar.MONTH, getMonth() - 1);
-	}
-	calendar.set(Calendar.YEAR, getYear());
-	return calendar.getTime();
+        Calendar calendar = ThreadLocalObjects.getCalendar();
+        if (getDay() != null) {
+            calendar.set(Calendar.DATE, getDay());
+        }
+        if (getMonth() != null) {
+            calendar.set(Calendar.MONTH, getMonth() - 1);
+        }
+        calendar.set(Calendar.YEAR, getYear());
+        return calendar.getTime();
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (!(obj instanceof CalendarDate)) {
-	    return false;
-	}
-	if (obj == this) {
-	    return true;
-	}
-	CalendarDate cd = (CalendarDate) obj;
-	return new EqualsBuilder().append(getDay(), cd.getDay()).append(
-		getMonth(), cd.getMonth()).append(getYear(), cd.getYear())
-		.isEquals();
+        if (!(obj instanceof CalendarDate)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        CalendarDate cd = (CalendarDate) obj;
+        return new EqualsBuilder().append(getDay(), cd.getDay()).append(
+                getMonth(), cd.getMonth()).append(getYear(), cd.getYear())
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-	return new HashCodeBuilder().append(getDay()).append(getMonth())
-		.append(getYear()).toHashCode();
+        return new HashCodeBuilder().append(getDay()).append(getMonth())
+                .append(getYear()).toHashCode();
     }
 
     public int compareTo(CalendarDate o) {
-	return new CompareToBuilder().append(getYear(), o.getYear()).append(
-		getMonth(), o.getMonth()).append(getDay(), o.getDay())
-		.toComparison();
+        return new CompareToBuilder().append(getYear(), o.getYear()).append(
+                getMonth(), o.getMonth()).append(getDay(), o.getDay())
+                .toComparison();
     }
 }
