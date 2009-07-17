@@ -23,40 +23,38 @@ public class DefaultKeyValue<K, V> implements KeyValue<K, V> {
     private final V value;
 
     public DefaultKeyValue(K key, V value) {
-	this.key = key;
-	this.value = value;
+        this.key = key;
+        this.value = value;
     }
 
     public K getKey() {
-	return key;
+        return key;
     }
 
     public V getValue() {
-	return value;
+        return value;
     }
 
     @Override
     public String toString() {
-	return new StringBuilder().append(getKey()).append('=').append(
-		getValue()).toString();
+        return new StringBuilder().append(getKey()).append('=').append(getValue()).toString();
     }
 
     @Override
     public boolean equals(Object obj) {
-	if (obj instanceof DefaultKeyValue == false) {
-	    return false;
-	}
-	if (this == obj) {
-	    return true;
-	}
-	DefaultKeyValue<?, ?> o = (DefaultKeyValue<?, ?>) obj;
-	return new EqualsBuilder().append(getKey(), o.getKey()).append(
-		getValue(), o.getValue()).isEquals();
+        if (obj instanceof DefaultKeyValue<?, ?> == false) {
+            return false;
+        }
+        if (this == obj) {
+            return true;
+        }
+        DefaultKeyValue<?, ?> o = (DefaultKeyValue<?, ?>) obj;
+        return new EqualsBuilder().append(getKey(), o.getKey()).append(getValue(), o.getValue())
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-	return new HashCodeBuilder().append(getKey()).append(getValue())
-		.toHashCode();
+        return new HashCodeBuilder().append(getKey()).append(getValue()).toHashCode();
     }
 }
