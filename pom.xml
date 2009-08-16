@@ -8,6 +8,12 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <description></description>
+    <repositories>
+        <repository>
+            <id>photogal-thirdparty</id>
+            <url>http://photogal.sourceforge.net/maven/thirdparty</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>commons-collections</groupId>
@@ -20,6 +26,18 @@
             <artifactId>commons-lang</artifactId>
             <version>2.4</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.im4java</groupId>
+            <artifactId>im4java</artifactId>
+            <version>0.98.0</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.mortennobel</groupId>
+            <artifactId>imagescaling</artifactId>
+            <version>0.8.0</version>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -53,22 +71,9 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>3.3.1.GA</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-            <exclusions>
-                <exclusion>
-                    <groupId>javax.transaction</groupId>
-                    <artifactId>jta</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>2.5.5</version>
+            <version>2.5.6</version>
             <scope>compile</scope>
             <optional>true</optional>
             <exclusions>
@@ -77,6 +82,12 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>1.4</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>
@@ -102,6 +113,13 @@
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             <plugin>
