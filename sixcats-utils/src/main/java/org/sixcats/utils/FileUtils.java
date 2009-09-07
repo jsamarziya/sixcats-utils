@@ -28,57 +28,68 @@ public class FileUtils {
      * Returns <code>true</code> if the specified directory is an ancestor
      * directory of the specified file.
      * 
-     * @param directory
-     *                the directory
-     * @param file
-     *                the file
-     * @return <code>true</code> if <i>directory</i> is an ancestor directory
-     *         of <i>file</i>, <code>false</code> otherwise
-     * @throws NullPointerException
-     *                 if <i>directory</i> or <i>file</i> is <code>null</code>
-     * @throws IOException
-     *                 if an I/O error occurs
+     * @param directory the directory
+     * @param file the file
+     * @return <code>true</code> if <i>directory</i> is an ancestor directory of
+     *         <i>file</i>, <code>false</code> otherwise
+     * @throws NullPointerException if <i>directory</i> or <i>file</i> is
+     *             <code>null</code>
+     * @throws IOException if an I/O error occurs
      */
     public static final boolean isAncestor(final File directory, final File file)
-	    throws IOException {
-	if (directory == null) {
-	    throw new NullPointerException("directory cannot be null");
-	}
-	if (file == null) {
-	    throw new NullPointerException("file cannot be null");
-	}
-	File ancestor = directory.getCanonicalFile();
-	File d = file.getCanonicalFile();
-	while (d != null) {
-	    if (d.equals(ancestor)) {
-		return true;
-	    } else {
-		d = d.getParentFile();
-	    }
-	}
-	return false;
+            throws IOException {
+        if (directory == null) {
+            throw new NullPointerException("directory cannot be null");
+        }
+        if (file == null) {
+            throw new NullPointerException("file cannot be null");
+        }
+        File ancestor = directory.getCanonicalFile();
+        File d = file.getCanonicalFile();
+        while (d != null) {
+            if (d.equals(ancestor)) {
+                return true;
+            } else {
+                d = d.getParentFile();
+            }
+        }
+        return false;
     }
 
     /**
      * Returns the path of a file relative to a parent directory
      * 
-     * @param parent
-     *                the parent directory
-     * @param file
-     *                the file
+     * @param parent the parent directory
+     * @param file the file
      * @return the path of the file relative to the parent
-     * @throws IOException
-     *                 if an I/O error occurs
+     * @throws IOException if an I/O error occurs
      */
-    public static final String getRelativePath(final File parent,
-	    final File file) throws IOException {
-	if (!isAncestor(parent, file)) {
-	    throw new IllegalArgumentException(parent
-		    + " is not an ancestor of " + file);
-	}
-	String retval = StringUtils.removeStart(file.getCanonicalPath(), parent
-		.getCanonicalPath());
-	retval = StringUtils.removeStart(retval, File.separator);
-	return retval;
+    public static final String getRelativePath(final File parent, final File file)
+            throws IOException {
+        if (!isAncestor(parent, file)) {
+            throw new IllegalArgumentException(parent + " is not an ancestor of " + file);
+        }
+        String retval = StringUtils.removeStart(file.getCanonicalPath(), parent.getCanonicalPath());
+        retval = StringUtils.removeStart(retval, File.separator);
+        return retval;
+    }
+
+    /**
+     * Creates a new temp directory.
+     * 
+     * @param prefix the prefix string to be used in generating the file's name;
+     *            must be at least three characters long
+     * 
+     * @param suffix the suffix string to be used in generating the file's name;
+     *            may be <code>null</code>, in which case the suffix ".tmp" will
+     *            be used
+     * @return an abstract pathname denoting the newly-created temp directory
+     * @throws IOException if an I/O error occurs
+     */
+    public static final File makeTempDirectory(String prefix, String suffix) throws IOException {
+        final File retval = File.createTempFile(prefix, suffix);
+        org.apache.commons.io.FileUtils.forceDelete(retval);
+        org.apache.commons.io.FileUtils.forceMkdir(retval);
+        return retval;
     }
 }
