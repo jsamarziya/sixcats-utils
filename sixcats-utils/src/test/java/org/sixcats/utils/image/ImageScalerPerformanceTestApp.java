@@ -48,10 +48,11 @@ public class ImageScalerPerformanceTestApp {
         final Collection<File> sourceFiles = ImageUtils.getImageFiles(sourceImageDir);
 
         final StringBuilder sb = new StringBuilder();
+        runTest(sourceFiles, targetDir, new FastImageScaler(), sb);
         runTest(sourceFiles, targetDir, new AffineTransformImageScaler(), sb);
         runTest(sourceFiles, targetDir, new MultiStepBilinearScaler(), sb);
         runTest(sourceFiles, targetDir, new MultiStepScaler(), sb);
-        runTest(sourceFiles, targetDir, new ImageMagickScaler(), sb);
+        //runTest(sourceFiles, targetDir, new ImageMagickScaler(), sb);
         runTest(sourceFiles, targetDir, new ScaledImageScaler(), sb);
         runTest(sourceFiles, targetDir, new NobelImageScaler(), sb);
         final String message = sb.toString();
@@ -91,8 +92,8 @@ public class ImageScalerPerformanceTestApp {
                 final File targetFile = new File(scaledImageTargetDir, sourceFile.getName());
                 final long startTime = System.currentTimeMillis();
                 scaler.resize(sourceFile, targetFile, scaleFactor / 100.0);
-                Runtime.getRuntime().gc();
                 final long elapsedTime = System.currentTimeMillis() - startTime;
+                Runtime.getRuntime().gc();
                 sb.append("image:" + sourceFile + " scaleFactor:" + scaleFactor + " elapsedTime:"
                         + elapsedTime + "ms \n");
                 iterationElapsedTime += elapsedTime;
