@@ -24,8 +24,12 @@ import java.io.File;
 import java.io.IOException;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ImageUtilsTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageUtilsTest.class);
+
     @Test
     public void testGetImageType() {
         assertThat(ImageUtils.getImageType(BufferedImage.TYPE_3BYTE_BGR), is("TYPE_3BYTE_BGR"));
@@ -44,5 +48,18 @@ public class ImageUtilsTest {
                 is("png"));
         assertThat(ImageUtils.getImageFormatName(new File("target/test-classes/ram.jpg")),
                 is("JPEG"));
+    }
+
+    @Test
+    public void testReadImage() throws IOException {
+        final String[] imageFiles = { "animclam.gif", "Daisies.bmp", "DSC_0085.JPG", "HATCH3.gif",
+                "IMG_0480.JPG", "PA080040.JPG", "project.png", "ram.jpg" };
+        for (String imageFile : imageFiles) {
+            final File file = new File("target/test-classes", imageFile);
+            final long t0 = System.currentTimeMillis();
+            ImageUtils.readImage(file);
+            final long t1 = System.currentTimeMillis();
+            LOGGER.debug("Elapsed time to load " + imageFile + ": " + (t1 - t0) + " ms");
+        }
     }
 }
