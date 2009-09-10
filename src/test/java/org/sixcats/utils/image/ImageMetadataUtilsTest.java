@@ -30,24 +30,59 @@ import java.util.Calendar;
 
 import org.junit.Test;
 
-import com.drew.imaging.jpeg.JpegProcessingException;
-import com.drew.metadata.MetadataException;
-
 public class ImageMetadataUtilsTest {
     @Test
-    public void testGetImageDate() throws JpegProcessingException, MetadataException {
-        assertThat(ImageMetadataUtils.getImageDate(new File("target/test-classes/ram.jpg")),
-                is(nullValue()));
+    public void testGetImageDate() throws IOException {
         final Calendar expectedTime = Calendar.getInstance();
+        assertThat(ImageMetadataUtils.getImageDate(new File("target/test-classes/animclam.gif")),
+                is(nullValue()));
+        assertThat(ImageMetadataUtils.getImageDate(new File("target/test-classes/Daisies.bmp")),
+                is(nullValue()));
+        expectedTime.clear();
+        expectedTime.set(2007, 6, 8, 16, 38, 20);
+        assertThat(ImageMetadataUtils.getImageDate(new File("target/test-classes/DSC_0085.JPG")),
+                is(expectedTime.getTime()));
+        assertThat(ImageMetadataUtils.getImageDate(new File("target/test-classes/HATCH3.gif")),
+                is(nullValue()));
+        expectedTime.clear();
+        expectedTime.set(2008, 6, 14, 15, 32, 45);
+        assertThat(ImageMetadataUtils.getImageDate(new File("target/test-classes/IMG_0480.JPG")),
+                is(expectedTime.getTime()));
         expectedTime.clear();
         expectedTime.set(2006, 9, 8, 10, 9, 33);
         assertThat(ImageMetadataUtils.getImageDate(new File("target/test-classes/PA080040.JPG")),
                 is(expectedTime.getTime()));
+        assertThat(ImageMetadataUtils.getImageDate(new File("target/test-classes/project.png")),
+                is(nullValue()));
+        assertThat(ImageMetadataUtils.getImageDate(new File("target/test-classes/ram.jpg")),
+                is(nullValue()));
     }
 
     @Test
     public void testGetSize() throws IOException {
-        Dimension size = ImageMetadataUtils.getSize(new File("target/test-classes/ram.jpg"));
+        Dimension size;
+        size = ImageMetadataUtils.getSize(new File("target/test-classes/animclam.gif"));
+        assertThat(size.width, is(120));
+        assertThat(size.height, is(94));
+        size = ImageMetadataUtils.getSize(new File("target/test-classes/Daisies.bmp"));
+        assertThat(size.width, is(157));
+        assertThat(size.height, is(130));
+        size = ImageMetadataUtils.getSize(new File("target/test-classes/DSC_0085.JPG"));
+        assertThat(size.width, is(3008));
+        assertThat(size.height, is(2000));
+        size = ImageMetadataUtils.getSize(new File("target/test-classes/IMG_0480.JPG"));
+        assertThat(size.width, is(3072));
+        assertThat(size.height, is(2304));
+        size = ImageMetadataUtils.getSize(new File("target/test-classes/HATCH3.gif"));
+        assertThat(size.width, is(175));
+        assertThat(size.height, is(100));
+        size = ImageMetadataUtils.getSize(new File("target/test-classes/PA080040.JPG"));
+        assertThat(size.width, is(1280));
+        assertThat(size.height, is(960));
+        size = ImageMetadataUtils.getSize(new File("target/test-classes/project.png"));
+        assertThat(size.width, is(800));
+        assertThat(size.height, is(600));
+        size = ImageMetadataUtils.getSize(new File("target/test-classes/ram.jpg"));
         assertThat(size.width, is(533));
         assertThat(size.height, is(400));
     }
