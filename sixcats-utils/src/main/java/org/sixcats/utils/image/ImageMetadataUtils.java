@@ -34,11 +34,14 @@ import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 import org.apache.sanselan.formats.tiff.TiffField;
 import org.apache.sanselan.formats.tiff.constants.TiffConstants;
 
+/**
+ * Image metadata utility methods.
+ */
 public class ImageMetadataUtils {
     /**
      * Returns the date an image was created.
      * 
-     * @param fil the file containing the image
+     * @param file the file containing the image
      * @return the date the image was created, or <code>null</code> if the image
      *         does not contain creation date information
      * @throws IOException if an I/O error occurs
