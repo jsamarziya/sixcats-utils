@@ -19,39 +19,72 @@
 package org.sixcats.utils.image;
 
 import java.awt.Dimension;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.sixcats.utils.image.ImageUtils;
-
-import com.drew.imaging.jpeg.JpegMetadataReader;
-import com.drew.imaging.jpeg.JpegProcessingException;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.MetadataException;
-import com.drew.metadata.exif.ExifDirectory;
+import org.apache.sanselan.ImageInfo;
+import org.apache.sanselan.ImageReadException;
+import org.apache.sanselan.Sanselan;
+import org.apache.sanselan.common.IImageMetadata;
+import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
+import org.apache.sanselan.formats.tiff.TiffField;
+import org.apache.sanselan.formats.tiff.constants.TiffConstants;
 
 public class ImageMetadataUtils {
     /**
-     * Returns the date a JPEG image was created.
+     * Returns the date an image was created.
      * 
-     * @param jpegFile the file containing the JPEG image
-     * @return the date the image was created, or <code>null</code> if the
-     * image does not contain creation date information
-     * @throws JpegProcessingException if an error occurs
-     * @throws MetadataException if an error occurs
+     * @param fil the file containing the image
+     * @return the date the image was created, or <code>null</code> if the image
+     *         does not contain creation date information
+     * @throws IOException if an I/O error occurs
      */
-    public static final Date getImageDate(final File jpegFile)
-            throws JpegProcessingException, MetadataException {
-        Metadata metadata = JpegMetadataReader.readMetadata(jpegFile);
-        ExifDirectory directory = (ExifDirectory) metadata
-                .getDirectory(ExifDirectory.class);
+    public static final Date getImageDate(final File file) throws IOException {
         Date retval = null;
-        if (directory.containsTag(ExifDirectory.TAG_DATETIME)) {
-            retval = directory.getDate(ExifDirectory.TAG_DATETIME);
+        try {
+            final IImageMetadata metadata = Sanselan.getMetadata(file);
+            if (metadata instanceof JpegImageMetadata) {
+                final JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
+                final TiffField field = jpegMetadata.getExif().findField(
+                        TiffConstants.EXIF_TAG_DATE_TIME_ORIGINAL);
+                if (field != null) {
+                    retval = getFieldAsDate(field.getValue());
+                }
+            }
+        } catch (ImageReadException ex) {
+            throw new IOException(ex);
         }
         return retval;
+    }
+
+    // This code was lifted from com.drew.metadata.exif.ExifDirectory
+    private static Date getFieldAsDate(Object value) {
+        if (value == null) {
+            return null;
+        } else if (value instanceof java.util.Date) {
+            return (java.util.Date) value;
+        } else if (value instanceof String) {
+            // add new dateformat strings to make this method even smarter
+            // so far, this seems to cover all known date strings
+            // (for example, AM and PM strings are not supported...)
+            final String datePatterns[] = { "yyyy:MM:dd HH:mm:ss", "yyyy:MM:dd HH:mm",
+                    "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm" };
+            for (String datePattern : datePatterns) {
+                try {
+                    final DateFormat parser = new SimpleDateFormat(datePattern);
+                    return parser.parse((String) value);
+                } catch (ParseException ex) {
+                    // simply try the next pattern
+                }
+            }
+        }
+        throw new IllegalArgumentException(
+                "value cannot be cast to a java.util.Date.  It is of type '" + value.getClass()
+                        + "'.");
     }
 
     /**
@@ -62,8 +95,12 @@ public class ImageMetadataUtils {
      * @throws IOException if an I/O error occurs
      */
     public static Dimension getSize(final File file) throws IOException {
-        // TODO there's got to be a better way...
-        final BufferedImage image = ImageUtils.readImage(file);
-        return new Dimension(image.getWidth(), image.getHeight());
+        ImageInfo info;
+        try {
+            info = Sanselan.getImageInfo(file);
+        } catch (ImageReadException ex) {
+            throw new IOException(ex);
+        }
+        return new Dimension(info.getWidth(), info.getHeight());
     }
 }
