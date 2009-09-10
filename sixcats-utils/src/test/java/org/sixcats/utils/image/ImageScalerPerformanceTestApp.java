@@ -52,7 +52,6 @@ public class ImageScalerPerformanceTestApp {
         runTest(sourceFiles, targetDir, new AffineTransformImageScaler(), sb);
         runTest(sourceFiles, targetDir, new MultiStepBilinearScaler(), sb);
         runTest(sourceFiles, targetDir, new MultiStepScaler(), sb);
-        //runTest(sourceFiles, targetDir, new ImageMagickScaler(), sb);
         runTest(sourceFiles, targetDir, new ScaledImageScaler(), sb);
         runTest(sourceFiles, targetDir, new NobelImageScaler(), sb);
         final String message = sb.toString();

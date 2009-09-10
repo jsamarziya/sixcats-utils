@@ -34,12 +34,6 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.im4java</groupId>
-            <artifactId>im4java</artifactId>
-            <version>0.98.0</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>com.mortennobel</groupId>
             <artifactId>imagescaling</artifactId>
             <version>0.8.0</version>
