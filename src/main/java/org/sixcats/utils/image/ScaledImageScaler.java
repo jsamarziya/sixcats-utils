@@ -34,7 +34,7 @@ import java.awt.image.BufferedImage;
 public class ScaledImageScaler extends AbstractImageScaler {
     @Override
     protected BufferedImage resizeInternal(BufferedImage image, double scaleFactor) {
-        final BufferedImage retval = createCompatibleDestImage(image, scaleFactor);
+        final BufferedImage retval = ImageUtils.createCompatibleDestImage(image, scaleFactor);
         final Image i = image.getScaledInstance(retval.getWidth(), retval.getHeight(),
                 Image.SCALE_SMOOTH);
         final Graphics g = retval.createGraphics();

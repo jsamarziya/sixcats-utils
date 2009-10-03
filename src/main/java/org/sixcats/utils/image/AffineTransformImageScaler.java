@@ -34,7 +34,7 @@ import java.awt.image.BufferedImage;
 public class AffineTransformImageScaler extends AbstractImageScaler {
     @Override
     protected BufferedImage resizeInternal(BufferedImage image, double scaleFactor) {
-        final BufferedImage retval = createCompatibleDestImage(image, scaleFactor);
+        final BufferedImage retval = ImageUtils.createCompatibleDestImage(image, scaleFactor);
         final Graphics2D g = retval.createGraphics();
         final AffineTransform at = AffineTransform.getScaleInstance(scaleFactor, scaleFactor);
         g.drawRenderedImage(image, at);

@@ -16,7 +16,6 @@
 
 package org.sixcats.utils.image;
 
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -77,21 +76,4 @@ public abstract class AbstractImageScaler implements ImageScaler {
      * image is not <code>null</code> and the scale factor is valid.
      */
     protected abstract BufferedImage resizeInternal(BufferedImage image, double scaleFactor);
-
-    /**
-     * Creates a destination image scaled to the appropriate size.
-     * 
-     * @param source the BufferedImage to be transformed
-     * @param scale_factor the factor by which to size the destination image
-     * @return the destination image
-     */
-    protected BufferedImage createCompatibleDestImage(BufferedImage source, double scale_factor) {
-        final Dimension scaledSize = ImageUtils.getScaledSize(source, scale_factor);
-        final int type = source.getType();
-        if (logger.isDebugEnabled()) {
-            logger.debug("Creating image of type " + ImageUtils.getImageType(type));
-        }
-        final BufferedImage retval = new BufferedImage(scaledSize.width, scaledSize.height, type);
-        return retval;
-    }
 }
