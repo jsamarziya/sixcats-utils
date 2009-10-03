@@ -18,6 +18,8 @@ package org.sixcats.utils.image;
 
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,11 +41,15 @@ import javax.imageio.stream.ImageOutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Image-related utility methods.
  */
 public class ImageUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageUtils.class);
+    private static final float DEFAULT_SOFTEN_FACTOR = 0.01f;
     private static final Map<Integer, String> IMAGE_TYPE_NAMES;
     static {
         final Map<Integer, String> map = new HashMap<Integer, String>();
@@ -62,6 +68,23 @@ public class ImageUtils {
         map.put(BufferedImage.TYPE_USHORT_565_RGB, "TYPE_USHORT_565_RGB");
         map.put(BufferedImage.TYPE_USHORT_GRAY, "TYPE_USHORT_GRAY");
         IMAGE_TYPE_NAMES = Collections.unmodifiableMap(map);
+    }
+
+    /**
+     * Returns the scale factor required to scale an image so that the height
+     * and width of the image do not exceed the specified size.
+     * 
+     * @param size the image size
+     * @param maxSize the maximum allowed value for the height and width
+     * @return the scale factor
+     */
+    public static double getScaleFactor(Dimension size, int maxSize) {
+        final int maxDimension = Math.max(size.height, size.width);
+        if (maxDimension <= maxSize) {
+            return 1.0;
+        } else {
+            return (double) maxSize / maxDimension;
+        }
     }
 
     /**
@@ -232,5 +255,68 @@ public class ImageUtils {
         final int width = (int) (image.getWidth() * scaleFactor);
         final int height = (int) (image.getHeight() * scaleFactor);
         return new Dimension(width, height);
+    }
+
+    public static BufferedImage smooth(final BufferedImage image) {
+        float[] kernelData = { 1, 4, 7, 4, 1, 4, 16, 26, 16, 4, 7, 26, 41, 26, 7, 4, 16, 26, 16, 4,
+                1, 4, 7, 4, 1 };
+        int total = 0;
+        for (int i = 0; i < kernelData.length; i++) {
+            total += kernelData[i];
+        }
+        for (int i = 0; i < kernelData.length; i++) {
+            kernelData[i] /= total;
+        }
+        Kernel kernel = new Kernel(5, 5, kernelData);
+        ConvolveOp op = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+        return op.filter(image, createCompatibleDestImage(image));
+    }
+
+    public static BufferedImage soften(final BufferedImage image) {
+        return soften(image, DEFAULT_SOFTEN_FACTOR);
+    }
+
+    public static BufferedImage soften(final BufferedImage image, final float softenFactor) {
+        float[] kernelData = { 0, softenFactor, 0, softenFactor, 1 - (softenFactor * 4),
+                softenFactor, 0, softenFactor, 0 };
+        Kernel kernel = new Kernel(3, 3, kernelData);
+        ConvolveOp op = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+        return op.filter(image, createCompatibleDestImage(image));
+    }
+
+    public static BufferedImage sharpen(final BufferedImage image) {
+        float[] kernelData = { 0.0f, -1.0f, 0.0f, -1.0f, 5.f, -1.0f, 0.0f, -1.0f, 0.0f };
+        Kernel kernel = new Kernel(3, 3, kernelData);
+        ConvolveOp op = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+        return op.filter(image, createCompatibleDestImage(image));
+    }
+
+    /**
+     * Creates an image of the appropriate type and size to contain a scaled
+     * instance of the specified image.
+     * 
+     * @param source the image to be transformed
+     * @param scale_factor the factor by which to resize the image
+     * @return the destination image
+     */
+    public static BufferedImage createCompatibleDestImage(BufferedImage source, double scale_factor) {
+        final Dimension scaledSize = getScaledSize(source, scale_factor);
+        final int type = source.getType();
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Creating image of type " + ImageUtils.getImageType(type));
+        }
+        final BufferedImage retval = new BufferedImage(scaledSize.width, scaledSize.height, type);
+        return retval;
+    }
+
+    /**
+     * Creates an image of the appropriate type to contain a transformed
+     * instance of the specified image.
+     * 
+     * @param source the image to be transformed
+     * @return the destination image
+     */
+    public static BufferedImage createCompatibleDestImage(BufferedImage source) {
+        return new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
     }
 }

@@ -19,6 +19,7 @@ package org.sixcats.utils.image;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +30,28 @@ import org.slf4j.LoggerFactory;
 
 public class ImageUtilsTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageUtilsTest.class);
+
+    @Test
+    public void testGetScaleFactor() {
+        assertThat(ImageUtils.getScaleFactor(new Dimension(50, 100), 10), is(.1));
+        assertThat(ImageUtils.getScaleFactor(new Dimension(100, 50), 10), is(.1));
+
+        assertThat(ImageUtils.getScaleFactor(new Dimension(50, 100), 25), is(.25));
+        assertThat(ImageUtils.getScaleFactor(new Dimension(100, 50), 25), is(.25));
+
+        assertThat(ImageUtils.getScaleFactor(new Dimension(50, 100), 50), is(.5));
+        assertThat(ImageUtils.getScaleFactor(new Dimension(100, 50), 50), is(.5));
+
+        assertThat(ImageUtils.getScaleFactor(new Dimension(50, 100), 75), is(.75));
+        assertThat(ImageUtils.getScaleFactor(new Dimension(100, 50), 75), is(.75));
+
+        assertThat(ImageUtils.getScaleFactor(new Dimension(50, 100), 100), is(1.0));
+        assertThat(ImageUtils.getScaleFactor(new Dimension(100, 50), 100), is(1.0));
+
+        assertThat(ImageUtils.getScaleFactor(new Dimension(50, 100), 125), is(1.0));
+        assertThat(ImageUtils.getScaleFactor(new Dimension(100, 50), 125), is(1.0));
+
+    }
 
     @Test
     public void testGetImageType() {
@@ -61,5 +84,20 @@ public class ImageUtilsTest {
             final long t1 = System.currentTimeMillis();
             LOGGER.debug("Elapsed time to load " + imageFile + ": " + (t1 - t0) + " ms");
         }
+    }
+
+    @Test
+    public void testCreateCompatibleDestImage() {
+        final BufferedImage image1 = ImageUtils.createCompatibleDestImage(new BufferedImage(5, 10,
+                BufferedImage.TYPE_INT_ARGB));
+        assertThat(image1.getType(), is(BufferedImage.TYPE_INT_ARGB));
+        assertThat(image1.getWidth(), is(5));
+        assertThat(image1.getHeight(), is(10));
+
+        final BufferedImage image2 = ImageUtils.createCompatibleDestImage(new BufferedImage(20, 30,
+                BufferedImage.TYPE_INT_RGB), .1);
+        assertThat(image2.getType(), is(BufferedImage.TYPE_INT_RGB));
+        assertThat(image2.getWidth(), is(2));
+        assertThat(image2.getHeight(), is(3));
     }
 }
