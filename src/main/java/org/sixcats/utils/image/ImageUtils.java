@@ -21,7 +21,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,8 +38,9 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
+import org.apache.sanselan.ImageFormat;
+import org.apache.sanselan.ImageReadException;
+import org.apache.sanselan.Sanselan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -134,8 +134,11 @@ public class ImageUtils {
      *         unknown
      */
     public static String getImageFormatName(Object input) throws IOException {
-        String retval = null;
         final ImageInputStream iis = ImageIO.createImageInputStream(input);
+        if (iis == null) {
+            return null;
+        }
+        String retval = null;
         try {
             final Iterator<ImageReader> i = ImageIO.getImageReaders(iis);
             if (i.hasNext()) {
@@ -157,28 +160,14 @@ public class ImageUtils {
      * @throws IOException if an I/O error occurs
      */
     public static boolean isImage(final File file) throws IOException {
-        return getImageFormatName(file) != null;
-    }
-
-    /**
-     * Returns true if the given file is a JPEG file.
-     * 
-     * @param file the file
-     * @return <code>true</code> if the file is a JPEG file, <code>false</code>
-     *         otherwise
-     * @throws IOException if an I/O error occurs
-     */
-    public static boolean isJPEG(final File file) throws IOException {
-        boolean retval = false;
-        if (file.isFile()) {
-            final FileInputStream in = FileUtils.openInputStream(file);
-            try {
-                retval = in.read() == 255 && in.read() == 216;
-            } finally {
-                IOUtils.closeQuietly(in);
-            }
+        if (!file.isFile()) {
+            return false;
         }
-        return retval;
+        try {
+            return !ImageFormat.IMAGE_FORMAT_UNKNOWN.equals(Sanselan.guessFormat(file));
+        } catch (ImageReadException ex) {
+            throw new IOException(ex);
+        }
     }
 
     /**

@@ -100,4 +100,20 @@ public class ImageUtilsTest {
         assertThat(image2.getWidth(), is(2));
         assertThat(image2.getHeight(), is(3));
     }
+
+    @Test
+    public void testIsImage() throws IOException {
+        final String[] imageFiles = { "animclam.gif", "Daisies.bmp", "DSC_0085.JPG", "HATCH3.gif",
+                "IMG_0480.JPG", "PA080040.JPG", "project.png", "ram.jpg" };
+        for (String imageFile : imageFiles) {
+            final File file = new File("target/test-classes", imageFile);
+            assertThat(ImageUtils.isImage(file), is(true));
+        }
+        final File dir = new File("target/test-classes");
+        assertThat(dir.isDirectory(), is(true));
+        assertThat(ImageUtils.isImage(dir), is(false));
+        final File xmlFile = new File(dir, "log4j.xml");
+        assertThat(xmlFile.isFile(), is(true));
+        assertThat(ImageUtils.isImage(xmlFile), is(false));
+    }
 }
