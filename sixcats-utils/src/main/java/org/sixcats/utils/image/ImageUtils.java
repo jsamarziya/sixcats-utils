@@ -171,6 +171,25 @@ public class ImageUtils {
     }
 
     /**
+     * Returns <code>true</code> if the specified file is a JPEG file.
+     * 
+     * @param file the file
+     * @return <code>true</code> if the file is a JPEG, <code>false</code>
+     *         otherwise
+     * @throws IOException if an I/O error occurs
+     */
+    public static boolean isJPEG(final File file) throws IOException {
+        if (!file.isFile()) {
+            return false;
+        }
+        try {
+            return ImageFormat.IMAGE_FORMAT_JPEG.equals(Sanselan.guessFormat(file));
+        } catch (ImageReadException ex) {
+            throw new IOException(ex);
+        }
+    }
+
+    /**
      * Returns the image contained in the specified file.
      * 
      * @param file the file

@@ -116,4 +116,18 @@ public class ImageUtilsTest {
         assertThat(xmlFile.isFile(), is(true));
         assertThat(ImageUtils.isImage(xmlFile), is(false));
     }
+
+    @Test
+    public void testIsJPEG() throws IOException {
+        final String[] imageFiles = { "animclam.gif", "Daisies.bmp", "DSC_0085.JPG", "HATCH3.gif",
+                "IMG_0480.JPG", "PA080040.JPG", "project.png", "ram.jpg", "log4j.xml" };
+        final boolean[] expected = { false, false, true, false, true, true, false, true, false };
+        for (int i = 0; i < imageFiles.length; i++) {
+            final File file = new File("target/test-classes", imageFiles[i]);
+            assertThat(ImageUtils.isJPEG(file), is(expected[i]));
+        }
+        final File dir = new File("target/test-classes");
+        assertThat(dir.isDirectory(), is(true));
+        assertThat(ImageUtils.isImage(dir), is(false));
+    }
 }
