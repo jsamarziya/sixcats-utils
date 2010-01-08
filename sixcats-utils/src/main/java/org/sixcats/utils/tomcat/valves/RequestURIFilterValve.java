@@ -26,9 +26,8 @@ import org.apache.catalina.valves.RequestFilterValve;
  * 
  * <p>
  * For an example of how to configure this valve, see below. This could be added
- * to the <code>&lt;Service name="Catalina"&gt;</code> element in server.xml
- * (<i>$CATALINA_HOME</i>/conf/server.xml) to prevent serving any files
- * contained in .svn directories.
+ * to your server.xml file (<i>$CATALINA_HOME</i>/conf/server.xml) to prevent
+ * serving any files contained in .svn directories.
  * 
  * <pre>
  *   &lt;!-- prevent serving svn files --&gt;
