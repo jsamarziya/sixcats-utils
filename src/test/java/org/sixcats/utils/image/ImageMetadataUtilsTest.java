@@ -86,4 +86,12 @@ public class ImageMetadataUtilsTest {
         assertThat(size.width, is(533));
         assertThat(size.height, is(400));
     }
+
+    @Test
+    public void testGetOrientation() throws IOException {
+        assertThat(ImageMetadataUtils.getOrientation(new File("target/test-classes/ariel.jpg")),
+                is(6));
+        assertThat(ImageMetadataUtils.getOrientation(new File("target/test-classes/DSC_0085.JPG")),
+                is(1));
+    }
 }
