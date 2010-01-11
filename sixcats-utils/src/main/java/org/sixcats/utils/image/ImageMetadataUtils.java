@@ -123,7 +123,7 @@ public class ImageMetadataUtils {
             throw new IOException(ex);
         }
         if (!(metadata instanceof JpegImageMetadata)) {
-            throw new IllegalArgumentException("file " + file + " not a JPEG image");
+            return 1;
         }
         final JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
         final TiffField orientation = jpegMetadata
