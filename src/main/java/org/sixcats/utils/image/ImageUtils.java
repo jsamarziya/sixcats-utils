@@ -44,6 +44,8 @@ import org.apache.sanselan.Sanselan;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jhlabs.image.FlipFilter;
+
 /**
  * Image-related utility methods.
  */
@@ -263,6 +265,63 @@ public class ImageUtils {
         final int width = (int) (image.getWidth() * scaleFactor);
         final int height = (int) (image.getHeight() * scaleFactor);
         return new Dimension(width, height);
+    }
+
+    /**
+     * Reorients an image by rotating and/or flipping it.
+     * 
+     * <p>
+     * Orientation is specified using an integer value as used in the EXIF
+     * Orientation tag. The example below shows the letter <i>F</i> in the legal
+     * orientations.
+     * </p>
+     * 
+     * <pre>
+     * 1        2       3      4         5            6           7          8
+     * 
+     * 888888  888888      88  88      8888888888  88                  88  8888888888
+     * 88          88      88  88      88  88      88  88          88  88      88  88
+     * 8888      8888    8888  8888    88          8888888888  8888888888          88
+     * 88          88      88  88
+     * 88          88  888888  888888
+     * </pre>
+     * 
+     * @param image the image
+     * @param orientation the orientation of the image
+     */
+    public static BufferedImage reorientImage(BufferedImage image, int orientation) {
+        BufferedImage retval;
+        switch (orientation) {
+        case 1:
+            retval = image;
+            break;
+        case 2:
+            retval = new FlipFilter(FlipFilter.FLIP_V).filter(image, null);
+            break;
+        case 3:
+            retval = new FlipFilter(FlipFilter.FLIP_180).filter(image, null);
+            break;
+        case 4:
+            retval = new FlipFilter(FlipFilter.FLIP_H).filter(image, null);
+            break;
+        case 5:
+            retval = new FlipFilter(FlipFilter.FLIP_V).filter(image, null);
+            retval = new FlipFilter(FlipFilter.FLIP_90CCW).filter(image, null);
+            break;
+        case 6:
+            retval = new FlipFilter(FlipFilter.FLIP_90CW).filter(image, null);
+            break;
+        case 7:
+            retval = new FlipFilter(FlipFilter.FLIP_V).filter(image, null);
+            retval = new FlipFilter(FlipFilter.FLIP_90CW).filter(image, null);
+            break;
+        case 8:
+            retval = new FlipFilter(FlipFilter.FLIP_90CCW).filter(image, null);
+            break;
+        default:
+            throw new IllegalArgumentException("illegal orientation value " + orientation);
+        }
+        return retval;
     }
 
     public static BufferedImage smooth(final BufferedImage image) {
