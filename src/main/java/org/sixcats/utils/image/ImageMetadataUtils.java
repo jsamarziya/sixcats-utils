@@ -128,6 +128,9 @@ public class ImageMetadataUtils {
         final JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
         final TiffField orientation = jpegMetadata
                 .findEXIFValue(ExifTagConstants.EXIF_TAG_ORIENTATION);
+        if (orientation == null) {
+            return 1;
+        }
         int retval;
         try {
             retval = orientation.getIntValue();
