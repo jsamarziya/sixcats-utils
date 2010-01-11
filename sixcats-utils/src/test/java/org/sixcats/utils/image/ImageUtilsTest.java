@@ -24,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,5 +130,11 @@ public class ImageUtilsTest {
         final File dir = new File("target/test-classes");
         assertThat(dir.isDirectory(), is(true));
         assertThat(ImageUtils.isImage(dir), is(false));
+    }
+
+    @Test
+    @Ignore("not yet implemented")
+    public void testReorientImage() {
+        // TODO implement me
     }
 }
