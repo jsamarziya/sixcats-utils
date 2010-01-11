@@ -34,11 +34,15 @@ import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 import org.apache.sanselan.formats.tiff.TiffField;
 import org.apache.sanselan.formats.tiff.constants.ExifTagConstants;
 import org.apache.sanselan.formats.tiff.constants.TiffConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Image metadata utility methods.
  */
 public class ImageMetadataUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ImageMetadataUtils.class);
+
     /**
      * Returns the date an image was created.
      * 
@@ -116,26 +120,28 @@ public class ImageMetadataUtils {
      * @throws IOException if an I/O error occurs
      */
     public static int getOrientation(final File file) throws IOException {
-        IImageMetadata metadata;
+        IImageMetadata metadata = null;
         try {
             metadata = Sanselan.getMetadata(file);
         } catch (ImageReadException ex) {
-            throw new IOException(ex);
+            LOGGER.warn("Unable to get image metadata for " + file + ": " + ex.toString());
         }
         if (!(metadata instanceof JpegImageMetadata)) {
             return 1;
         }
+
         final JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
-        final TiffField orientation = jpegMetadata
+        final TiffField orientationTag = jpegMetadata
                 .findEXIFValue(ExifTagConstants.EXIF_TAG_ORIENTATION);
-        if (orientation == null) {
+        if (orientationTag == null) {
             return 1;
         }
-        int retval;
+
+        int retval = 1;
         try {
-            retval = orientation.getIntValue();
+            retval = orientationTag.getIntValue();
         } catch (ImageReadException ex) {
-            throw new RuntimeException(ex);
+            LOGGER.warn("Unable to get orientation tag value for " + file + ": " + ex.toString());
         }
         return retval;
     }

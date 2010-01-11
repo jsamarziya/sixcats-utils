@@ -97,5 +97,7 @@ public class ImageMetadataUtilsTest {
                 is(1));
         assertThat(ImageMetadataUtils.getOrientation(new File(
                 "target/test-classes/killyoukitty.jpg")), is(1));
+        assertThat(ImageMetadataUtils.getOrientation(new File("target/test-classes/IMG_0210.JPG")),
+                is(1));
     }
 }
