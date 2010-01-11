@@ -32,6 +32,7 @@ import org.apache.sanselan.Sanselan;
 import org.apache.sanselan.common.IImageMetadata;
 import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 import org.apache.sanselan.formats.tiff.TiffField;
+import org.apache.sanselan.formats.tiff.constants.ExifTagConstants;
 import org.apache.sanselan.formats.tiff.constants.TiffConstants;
 
 /**
@@ -105,5 +106,34 @@ public class ImageMetadataUtils {
             throw new IOException(ex);
         }
         return new Dimension(info.getWidth(), info.getHeight());
+    }
+
+    /**
+     * Returns the orientation of an image.
+     * 
+     * @param file the file containing the image
+     * @return the orientation of the image
+     * @throws IOException if an I/O error occurs
+     */
+    public static int getOrientation(final File file) throws IOException {
+        IImageMetadata metadata;
+        try {
+            metadata = Sanselan.getMetadata(file);
+        } catch (ImageReadException ex) {
+            throw new IOException(ex);
+        }
+        if (!(metadata instanceof JpegImageMetadata)) {
+            throw new IllegalArgumentException("file " + file + " not a JPEG image");
+        }
+        final JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
+        final TiffField orientation = jpegMetadata
+                .findEXIFValue(ExifTagConstants.EXIF_TAG_ORIENTATION);
+        int retval;
+        try {
+            retval = orientation.getIntValue();
+        } catch (ImageReadException ex) {
+            throw new RuntimeException(ex);
+        }
+        return retval;
     }
 }
