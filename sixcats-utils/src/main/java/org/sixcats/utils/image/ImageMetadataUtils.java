@@ -113,6 +113,35 @@ public class ImageMetadataUtils {
     }
 
     /**
+     * Returns the size of an image, swapping the width and height if the image
+     * is rotated.
+     * 
+     * @param file the file containing the image
+     * @return the size of the specified image
+     * @throws IOException if an I/O error occurs
+     */
+    public static Dimension getNormalizedSize(final File file) throws IOException {
+        Dimension retval = getSize(file);
+        if (isRotated(file)) {
+            retval = new Dimension(retval.height, retval.width);
+        }
+        return retval;
+    }
+
+    /**
+     * Returns <code>true</code> if the orientation of the specified image
+     * indicates that it is rotated 90 degrees clockwise or counterclockwise.
+     * 
+     * @param file the file containing the image
+     * @return the orientation of the image
+     * @throws IOException if an I/O error occurs
+     */
+    public static boolean isRotated(final File file) throws IOException {
+        final int orientation = getOrientation(file);
+        return orientation > 4;
+    }
+
+    /**
      * Returns the orientation of an image.
      * 
      * @param file the file containing the image
