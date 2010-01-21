@@ -168,7 +168,11 @@ public class ImageUtils {
         try {
             return !ImageFormat.IMAGE_FORMAT_UNKNOWN.equals(Sanselan.guessFormat(file));
         } catch (ImageReadException ex) {
-            throw new IOException(ex);
+            // NOTE: Sanselan#guessFormat(File) throws an ImageReadException
+            // when, in my opinion, it should just return IMAGE_FORMAT_UNKNOWN.
+            // Files that are empty or contain only one byte are two examples of
+            // files that are not handled properly.
+            return false;
         }
     }
 
