@@ -116,6 +116,12 @@ public class ImageUtilsTest {
         final File xmlFile = new File(dir, "log4j.xml");
         assertThat(xmlFile.isFile(), is(true));
         assertThat(ImageUtils.isImage(xmlFile), is(false));
+        final File emptyFile = new File(dir, "file0.txt");
+        assertThat(emptyFile.length(), is(0l));
+        assertThat(ImageUtils.isImage(emptyFile), is(false));
+        final File oneByteFile = new File(dir, "file1.txt");
+        assertThat(oneByteFile.length(), is(1l));
+        assertThat(ImageUtils.isImage(oneByteFile), is(false));
     }
 
     @Test
