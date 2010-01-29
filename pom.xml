@@ -8,6 +8,25 @@
     <packaging>jar</packaging>
     <name>sixcats-utils</name>
     <description>utility classes from sixcats.org</description>
+    <url>http://photogal.sourceforge.net/</url>
+    <inceptionYear>2006</inceptionYear>
+    <licenses>
+        <license>
+            <name>Apache</name>
+            <url>http://www.apache.org/licenses/</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <issueManagement>
+        <system>Tracker</system>
+        <url>http://sourceforge.net/tracker/?group_id=182981</url>
+    </issueManagement>
+    <scm>
+        <connection>scm:https://photogal.svn.sourceforge.net/svnroot/photogal/sixcats-utils/</connection>
+        <developerConnection>scm:https://photogal.svn.sourceforge.net/svnroot/photogal/sixcats-utils/</developerConnection>
+        <tag>HEAD</tag>
+        <url>http://photogal.svn.sourceforge.net/svnroot/photogal/sixcats-utils/</url>
+    </scm>
     <repositories>
         <repository>
             <id>java-image-scaling</id>
