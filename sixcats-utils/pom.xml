@@ -169,6 +169,38 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <header>src/etc/header.txt</header>
+                    <validHeaders>
+                        <validHeader>src/etc/header2009.txt</validHeader>
+                        <validHeader>src/etc/header2010.txt</validHeader>
+                    </validHeaders>
+                    <strictCheck>false</strictCheck>
+                    <includes>
+                        <include>src/main/**</include>
+                        <include>src/test/**</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/*.JPG</exclude>
+                        <exclude>**/*.txt</exclude>
+                        <exclude>**/*.xml</exclude>
+                    </excludes>
+                    <mapping>
+                        <java>SLASHSTAR_STYLE</java>
+                    </mapping>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <executions>
