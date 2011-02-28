@@ -52,6 +52,8 @@ public class ImageMetadataUtilsTest {
                 is(nullValue()));
         assertThat(ImageMetadataUtils.getImageDate(new File("target/test-classes/ram.jpg")),
                 is(nullValue()));
+        assertThat(ImageMetadataUtils.getImageDate(new File("target/test-classes/000517-85.jpg")),
+                is(nullValue()));
     }
 
     @Test
@@ -90,6 +92,9 @@ public class ImageMetadataUtilsTest {
         size = ImageMetadataUtils.getSize(new File("target/test-classes/ram.jpg"));
         assertThat(size.width, is(533));
         assertThat(size.height, is(400));
+        size = ImageMetadataUtils.getSize(new File("target/test-classes/000517-85.jpg"));
+        assertThat(size.width, is(253));
+        assertThat(size.height, is(399));
     }
 
     @Test
@@ -129,6 +134,9 @@ public class ImageMetadataUtilsTest {
         size = ImageMetadataUtils.getNormalizedSize(new File("target/test-classes/ram.jpg"));
         assertThat(size.width, is(533));
         assertThat(size.height, is(400));
+        size = ImageMetadataUtils.getNormalizedSize(new File("target/test-classes/000517-85.jpg"));
+        assertThat(size.width, is(253));
+        assertThat(size.height, is(399));
     }
 
     @Test
@@ -155,6 +163,9 @@ public class ImageMetadataUtilsTest {
                 is(1));
         assertThat(ImageMetadataUtils.getOrientation(new File("target/test-classes/ram.jpg")),
                 is(1));
+        assertThat(
+                ImageMetadataUtils.getOrientation(new File("target/test-classes/000517-85.jpg")),
+                is(1));
     }
 
     @Test
@@ -180,5 +191,7 @@ public class ImageMetadataUtilsTest {
         assertThat(ImageMetadataUtils.isRotated(new File("target/test-classes/project.png")),
                 is(false));
         assertThat(ImageMetadataUtils.isRotated(new File("target/test-classes/ram.jpg")), is(false));
+        assertThat(ImageMetadataUtils.isRotated(new File("target/test-classes/000517-85.jpg")),
+                is(false));
     }
 }
