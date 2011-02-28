@@ -29,6 +29,7 @@ import org.apache.sanselan.Sanselan;
 import org.apache.sanselan.common.IImageMetadata;
 import org.apache.sanselan.formats.jpeg.JpegImageMetadata;
 import org.apache.sanselan.formats.tiff.TiffField;
+import org.apache.sanselan.formats.tiff.TiffImageMetadata;
 import org.apache.sanselan.formats.tiff.constants.ExifTagConstants;
 import org.apache.sanselan.formats.tiff.constants.TiffConstants;
 import org.slf4j.Logger;
@@ -54,10 +55,13 @@ public class ImageMetadataUtils {
             final IImageMetadata metadata = Sanselan.getMetadata(file);
             if (metadata instanceof JpegImageMetadata) {
                 final JpegImageMetadata jpegMetadata = (JpegImageMetadata) metadata;
-                final TiffField field = jpegMetadata.getExif().findField(
-                        TiffConstants.EXIF_TAG_DATE_TIME_ORIGINAL);
-                if (field != null) {
-                    retval = getFieldAsDate(field.getValue());
+                final TiffImageMetadata exifMetadata = jpegMetadata.getExif();
+                if (exifMetadata != null) {
+                    final TiffField field = exifMetadata
+                            .findField(TiffConstants.EXIF_TAG_DATE_TIME_ORIGINAL);
+                    if (field != null) {
+                        retval = getFieldAsDate(field.getValue());
+                    }
                 }
             }
         } catch (ImageReadException ex) {
